@@ -5,9 +5,6 @@ import { removeperson } from "./people.js"
  * Opens the dialog for deleting a person.
  *
  * @param ev - Click event
- *
- * @returns void
- *
  */
 export function showDialog( ev ) {
   const dialog = document.querySelector( "dialog" )
@@ -48,9 +45,6 @@ export function showDialog( ev ) {
 
 /**
  * Clear all elements inside the dialog.
- *
- * @returns { void }
- *
  */
 function clearDialog() {
   const container = document.querySelector( ".dialog-container" )
