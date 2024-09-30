@@ -1,4 +1,4 @@
-import { getdata, putdata } from "./api.js";
+import { deletedata, getdata, putdata } from "./api.js"
 import {
   showform,
   getformfieldvalue,
@@ -6,22 +6,23 @@ import {
   clearform,
   gettablebody,
   cleartablerows,
-} from "./form.js";
-import { findancestorbytype } from "./dom.js";
+} from "./form.js"
+import { findancestorbytype } from "./dom.js"
+import { showDialog } from "./dialog.js"
 
-document.addEventListener("DOMContentLoaded", async function () {
+document.addEventListener( "DOMContentLoaded", async function () {
   document
-    .getElementById("addperson")
-    .addEventListener("click", addpersoninput);
-  await gopeople();
-});
+    .getElementById( "addperson" )
+    .addEventListener( "click", addpersoninput )
+  await gopeople()
+} )
 
 /**
  *
  * @returns { Promise< object > }
  */
 async function fetchpeople() {
-  return await getdata("people");
+  return await getdata( "people" )
 }
 
 /**
@@ -30,8 +31,8 @@ async function fetchpeople() {
  * @param { string } notes
  * @returns { Promise< object > }
  */
-async function addperson(name, email, notes) {
-  await putdata("people", { name, email, notes });
+async function addperson( name, email, notes ) {
+  await putdata( "people", { name, email, notes } )
 }
 
 /**
@@ -41,19 +42,29 @@ async function addperson(name, email, notes) {
  * @param { string } email
  * @param { string } notes
  */
-async function updateperson(id, name, email, notes) {
-  await putdata("people", { id, name, email, notes });
+async function updateperson( id, name, email, notes ) {
+  await putdata( "people", { id, name, email, notes } )
+}
+
+/**
+ * Remove person by id
+ *
+ * @param { number } id
+ */
+export async function removeperson( id ) {
+  await deletedata( "people", { id } )
+  await gopeople()
 }
 
 /**
  * @returns { Promise }
  */
 async function gopeople() {
-  const p = await fetchpeople();
-  cleartablerows("peopletable");
+  const p = await fetchpeople()
+  cleartablerows( "peopletable" )
 
-  for (const pi in p) {
-    addpersondom(p[pi]);
+  for( const pi in p ) {
+    addpersondom( p[pi] )
   }
 }
 
@@ -61,58 +72,67 @@ async function gopeople() {
  *
  */
 function addpersoninput() {
-  clearform("personform");
-  showform("personform", async () => {
+  clearform( "personform" )
+  showform( "personform", async () => {
     await addperson(
-      getformfieldvalue("personform-name"),
-      getformfieldvalue("personform-email"),
-      getformfieldvalue("personform-notes"),
-    );
-    await gopeople();
-  });
+      getformfieldvalue( "personform-name" ),
+      getformfieldvalue( "personform-email" ),
+      getformfieldvalue( "personform-notes" ),
+    )
+    await gopeople()
+  } )
 }
 
 /**
  *
  */
-function editperson(ev) {
-  clearform("personform");
-  const personrow = findancestorbytype(ev.target, "tr");
-  setformfieldvalue("personform-id", personrow.person.id);
-  setformfieldvalue("personform-name", personrow.person.name);
-  setformfieldvalue("personform-email", personrow.person.email);
-  setformfieldvalue("personform-notes", personrow.person.notes);
-  showform("personform", async () => {
+function editperson( ev ) {
+  clearform( "personform" )
+  const personrow = findancestorbytype( ev.target, "tr" )
+  setformfieldvalue( "personform-id", personrow.person.id )
+  setformfieldvalue( "personform-name", personrow.person.name )
+  setformfieldvalue( "personform-email", personrow.person.email )
+  setformfieldvalue( "personform-notes", personrow.person.notes )
+  showform( "personform", async () => {
     await updateperson(
       personrow.person.id,
-      getformfieldvalue("personform-name"),
-      getformfieldvalue("personform-email"),
-      getformfieldvalue("personform-notes"),
-    );
-    await gopeople();
-  });
+      getformfieldvalue( "personform-name" ),
+      getformfieldvalue( "personform-email" ),
+      getformfieldvalue( "personform-notes" ),
+    )
+    await gopeople()
+  } )
 }
 
 /**
  *
  * @param { object } person
  */
-export function addpersondom(person) {
-  const table = gettablebody("peopletable");
-  const newrow = table.insertRow();
+export function addpersondom( person ) {
+  const table = gettablebody( "peopletable" )
+  const newrow = table.insertRow()
 
-  const cells = [];
-  for (let i = 0; i < 2 + 7; i++) {
-    cells.push(newrow.insertCell(i));
+  const cells = []
+  for( let i = 0; i < 2 + 7; i++ ) {
+    cells.push( newrow.insertCell( i ) )
   }
 
   // @ts-ignore
-  newrow.person = person;
-  cells[0].innerText = person.name;
+  newrow.person = person
+  cells[0].innerText = person.name
 
-  const editbutton = document.createElement("button");
-  editbutton.textContent = "Edit";
-  editbutton.addEventListener("click", editperson);
+  const editbutton = document.createElement( "button" )
+  editbutton.textContent = "Edit"
+  editbutton.addEventListener( "click", editperson )
 
-  cells[8].appendChild(editbutton);
+  const removeButton = document.createElement( "button" )
+  removeButton.classList.add( "danger" )
+  removeButton.textContent = "Remove"
+  removeButton.addEventListener( "click", ( ev ) => {
+    showDialog( ev )
+  } )
+
+  cells[8].appendChild( editbutton )
+  cells[8].appendChild( removeButton )
+  cells[8].classList.add( "actions" )
 }

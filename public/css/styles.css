@@ -1,8 +1,25 @@
+/* Color variables */
+:root {
+  --bg: #ffffff;
+  --bg-2: #efefef;
+  --fg: #4d4d4c;
+  --selection: #d6d6d6;
+  --comment: #8e908c;
+  --red: #c82829;
+  --orange: #f5871f;
+  --yellow: #eab700;
+  --green: #718c00;
+  --aqua: #3e999f;
+  --blue: #4271ae;
+  --purple: #8959a8;
+}
+
 /* Reset some default browser styles */
-body, ul {
+body,
+ul {
   margin: 0;
   padding: 0;
-  font-family: 'Open Sans', sans-serif; /* Set Open Sans as the default font */
+  font-family: "Open Sans", sans-serif; /* Set Open Sans as the default font */
   font-size: 18px; /* Larger font size for better accessibility */
   display: flex;
   flex-direction: column;
@@ -33,6 +50,7 @@ footer {
   position: absolute;
   top: 50%;
   left: 50%;
+  background-color: var(--bg-2);
   transform: translate(-50%, -50%);
 }
 
@@ -40,9 +58,9 @@ footer {
 form {
   width: 500px;
   padding: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--bg-2);
   border-radius: 8px;
-  background-color: #f9f9f9;
+  background-color: var(--bg);
 }
 
 label {
@@ -53,10 +71,11 @@ label {
 /* Styling for form elements */
 input[type="text"],
 input[type="email"],
-button, textarea {
+button,
+textarea {
   padding: 12px; /* Increased padding for better clickability */
   margin-bottom: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--bg-2);
   border-radius: 5px;
   font-size: 18px; /* Larger font size for better accessibility */
 }
@@ -68,14 +87,22 @@ textarea {
 }
 
 button {
-  background-color: #006ab4; /* Use brand color #006ab4 for buttons */
-  color: #fff;
+  background-color: var(--blue);
+  color: var(--bg);
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
 button:hover {
-  background-color: #38d430; /* Use brand color #38d430 for button hover */
+  background-color: var(--aqua);
+}
+
+button.danger {
+  background-color: var(--red);
+}
+
+button.danger:hover {
+  background-color: var(--orange);
 }
 
 table {
@@ -88,13 +115,24 @@ tr:nth-of-type(2) th {
   border-bottom: none;
 }
 
-th, td {
+tr:nth-child(even) {
+  background-color: var(--bg-2);
+}
+
+th,
+td {
   padding: 12px; /* Increased padding for better readability */
   text-align: left;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--comment);
 }
 
 th {
-  background-color: #f2f2f2;
+  background-color: var(--bg-2);
 }
 
+.actions {
+  display: flex;
+  justify-content: start;
+  gap: 0.5rem;
+  align-items: center;
+}
